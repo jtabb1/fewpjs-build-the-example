@@ -3,6 +3,10 @@ const EMPTY_HEART = '♡'
 const FULL_HEART = '♥'
 
 // Your JavaScript code goes here!
+// (This developer prefers vanilla for loops because they are rumored
+//  to be more performant than other types of loops, per:
+//  https://blog.bitsrc.io/measuring-performance-of-different-javascript-loop-types-c0e9b1d193ed 
+//  (retrieved April 9, 2021))
 
 const glyphs = document.getElementsByClassName("like-glyph");
 const errorDiv = document.getElementById('modal');
@@ -11,53 +15,36 @@ const errorP = document.getElementById('modal-message');
 errorDiv.className = 'hidden';
 errorP.innerHTML = '';
 
-console.log(glyphs);
-console.log(glyphs.length);
 for (let i = 0; i < glyphs.length; i++) {
   glyphs[i].innerHTML = EMPTY_HEART;
   glyphs[i].classList.remove('activated-heart');
 }
-// glyphs.forEach( function(glyph) {
-//   glyph.innerHTML = EMPTY_HEART;
-// });
 
 for (let i = 0; i < glyphs.length; i++) {
   glyphs[i].addEventListener('click', event => {
     const glyphSpan = event.target;
     const glyphState = glyphSpan.classList.contains('activated-heart');
-    console.log(!glyphSpan);
-    if (!glyphState) {
-      mimicServerCall()
-      .then( () => {
-        glyphSpan.innerHTML = FULL_HEART;
-        glyphSpan.classList.add('activated-heart');
-        errorDiv.className = 'hidden';
-      })
-      .catch( e => {
-        errorDiv.className = '';
-            console.log(e);
-        errorP.innerHTML = e;
-      });
-    } else if (glyphState) {
-      mimicServerCall()
-      .then( () => {
-        glyphSpan.innerHTML = EMPTY_HEART;
-        glyphSpan.classList.remove('activated-heart');
-        errorDiv.className = 'hidden';
-      })
-      .catch( e => {
-        errorDiv.className = '';
-            console.log(e);
-        errorP.innerHTML = e;
-      });
-    } else {
-      alert('Error: Something must have gone wrong.')
-    }
+    changeDom(glyphState, glyphSpan);
   });
 }
 
-// function listen() {}
-
+function changeDom(state, node) {
+  mimicServerCall()
+  .then( () => {
+    if (!state) {
+      node.innerHTML = FULL_HEART;
+      node.classList.add('activated-heart');
+    } else {
+      node.innerHTML = EMPTY_HEART;
+      node.classList.remove('activated-heart');
+    }
+    errorDiv.className = 'hidden';
+  })
+  .catch( e => {
+    errorDiv.className = '';
+    errorP.innerHTML = e;
+  });
+}
 
 //------------------------------------------------------------------------------
 // Don't change the code below: this function mocks the server response
