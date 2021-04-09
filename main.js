@@ -24,25 +24,25 @@ for (let i = 0; i < glyphs.length; i++) {
   glyphs[i].addEventListener('click', event => {
     const glyphSpan = event.target;
     const glyphState = glyphSpan.classList.contains('activated-heart');
-    changeDom(glyphState, glyphSpan);
+    if (glyphState) {
+      glyphSpan.classList.remove('activated-heart');
+      glyphSpan.innerHTML = EMPTY_HEART;
+    } else {
+      callServer(glyphSpan);
+    }
   });
 }
 
-function changeDom(state, node) {
+function callServer(node) {
   mimicServerCall()
   .then( () => {
-    if (!state) {
-      node.innerHTML = FULL_HEART;
-      node.classList.add('activated-heart');
-    } else {
-      node.innerHTML = EMPTY_HEART;
-      node.classList.remove('activated-heart');
-    }
-    errorDiv.className = 'hidden';
+    node.innerHTML = FULL_HEART;
+    node.classList.add('activated-heart');
   })
   .catch( e => {
     errorDiv.className = '';
     errorP.innerHTML = e;
+    setTimeout(() => errorDiv.className = 'hidden', 3000);
   });
 }
 
