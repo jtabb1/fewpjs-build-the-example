@@ -12,7 +12,6 @@ const glyphs = document.getElementsByClassName("like-glyph");
 const errorDiv = document.getElementById('modal');
 const errorP = document.getElementById('modal-message');
 
-errorDiv.className = 'hidden';
 errorP.innerHTML = '';
 
 for (let i = 0; i < glyphs.length; i++) {
